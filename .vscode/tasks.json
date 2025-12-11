@@ -2,70 +2,18 @@
   "version": "2.0.0",
   "tasks": [
     {
-      "label": "Build (MinGW64 msmpi)",
+      "label": "MPI_Hello_World.cmd",
       "type": "shell",
-      "command": "g++",
-      "args": [
-        "MPI_Hello_World.c",
-        "-I\"$MSMPI_INC\"",
-        "-L\"$MSMPI_LIB64\"",
-        "-lmsmpi",
-        "-o",
-        "MPI_Hello_World.exe"
-      ],
-      "group": "build",
-      "problemMatcher": ["$gcc"]
-    },
-    {
-      "label": "Build with build_mpi.cmd",
-      "type": "shell",
-      "command": "build_mpi.cmd",
+      "command": "MPI_Hello_World\\MPI_Hello_World.cmd",
       "args": [],
       "group": "build",
       "problemMatcher": ["$gcc"]
     },
     {
-      "label": "Build (CMD msmpi)",
+      "label": "MPI_Bcast_And_Reduce.cmd",
       "type": "shell",
-      "windows": {
-        "command": "g++",
-        "args": [
-          "MPI_Hello_World.c",
-          "-I\"%MSMPI_INC%\"",
-          "-L\"%MSMPI_LIB64%\"",
-          "-lmsmpi",
-          "-o",
-          "MPI_Hello_World.exe"
-        ]
-      },
-      "group": "build",
-      "problemMatcher": ["$gcc"]
-    },
-    {
-      "label": "Install MPI (Linux)",
-      "type": "shell",
-      "linux": {
-        "command": "sudo",
-        "args": [
-          "apt-get",
-          "install",
-          "-y",
-          "libopenmpi-dev",
-          "openmpi-bin"
-        ]
-      }
-    },
-    {
-      "label": "Build (Linux OpenMPI)",
-      "type": "shell",
-      "linux": {
-        "command": "mpicc",
-        "args": [
-          "MPI_Hello_World.c",
-          "-o",
-          "MPI_Hello_World"
-        ]
-      },
+      "command": "MPI_Bcast_And_Reduce\\MPI_Bcast_And_Reduce.cmd",
+      "args": [],
       "group": "build",
       "problemMatcher": ["$gcc"]
     },
@@ -88,18 +36,6 @@
         "4",
         "MPI_Bcast_And_Reduce\\MPI_Bcast_And_Reduce.exe"
       ]
-    },
-    {
-      "label": "Run (mpirun 4 ranks Linux)",
-      "type": "shell",
-      "linux": {
-        "command": "mpirun",
-        "args": [
-          "-np",
-          "4",
-          "./MPI_Hello_World"
-        ]
-      }
     }
   ]
 }
