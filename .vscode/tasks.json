@@ -76,17 +76,17 @@
       "args": [
         "-n",
         "4",
-        "MPI_Hello_World.exe"
+        "MPI_Hello_World\\MPI_Hello_World.exe"
       ]
     },
     {
-      "label": "Run MPI_Bcast_MPI_Reduce (mpiexec 4 ranks Windows)",
+      "label": "Run MPI_Bcast_And_Reduce (mpiexec 4 ranks Windows)",
       "type": "shell",
       "command": "mpiexec",
       "args": [
         "-n",
         "4",
-        "MPI_Bcast_MPI_Reduce.exe"
+        "MPI_Bcast_And_Reduce\\MPI_Bcast_And_Reduce.exe"
       ]
     },
     {

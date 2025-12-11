@@ -11,10 +11,12 @@ set "MSMPI_LIB64=C:\Program Files (x86)\Microsoft SDKs\MPI\Lib\x64"
 cd /d %~dp0
 
 rem --- Build MPI program with MinGW g++ + MSMPI ---
-g++ MPI_Bcast_MPI_Reduce.c ^
+g++ MPI_Bcast_And_Reduce.c ^
   -I"%MSMPI_INC%" ^
   -L"%MSMPI_LIB64%" ^
   -lmsmpi ^
-  -o MPI_Bcast_MPI_Reduce.exe
+  -o MPI_Bcast_And_Reduce.exe
+
+call mpiexec -n 4 MPI_Bcast_And_Reduce.exe
 
 endlocal

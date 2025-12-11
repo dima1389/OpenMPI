@@ -17,4 +17,6 @@ g++ MPI_Hello_World.c ^
   -lmsmpi ^
   -o MPI_Hello_World.exe
 
+call mpiexec -n 4 MPI_Hello_World.exe
+
 endlocal
