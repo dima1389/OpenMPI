@@ -4,7 +4,7 @@ setlocal
 rem --------------------------------------------------------------------
 rem  Modify PATH so MinGW DLLs are used first (prevents popup issues)
 rem --------------------------------------------------------------------
-set "PATH=C:\msys64\mingw64\bin;C:\msys64\usr\bin;%SystemRoot%\system32;%PATH%"
+set "PATH=C:\msys64\mingw64\bin;%PATH%"
 
 rem --------------------------------------------------------------------
 rem  Define Microsoft MPI include & library folders (NO trailing '\')
@@ -49,12 +49,12 @@ if "%~3"=="" (
 rem --------------------------------------------------------------------
 rem  Build the MPI matrix-vector program
 rem --------------------------------------------------------------------
-echo Building MPI_Matrix_Vector.cpp ...
-g++ MPI_Matrix_Vector.cpp ^
+echo Building MPI_Matrix_Vector_General.c ...
+gcc MPI_Matrix_Vector_General.c ^
   -I"%MSMPI_INC%" ^
   -L"%MSMPI_LIB64%" ^
   -lmsmpi ^
-  -o MPI_Matrix_Vector.exe
+  -o MPI_Matrix_Vector_General.exe
 
 if %errorlevel% neq 0 (
     echo [ERROR] Compilation failed!
@@ -66,8 +66,8 @@ echo Build completed successfully.
 rem --------------------------------------------------------------------
 rem  Run the MPI program
 rem --------------------------------------------------------------------
-echo Running: mpiexec -n %NP% MPI_Matrix_Vector.exe %VEC_FILE% %MAT_FILE%
+echo Running: mpiexec -n %NP% MPI_Matrix_Vector_General.exe %VEC_FILE% %MAT_FILE%
 echo --------------------------------------------------------------
-call mpiexec -n %NP% MPI_Matrix_Vector.exe "%VEC_FILE%" "%MAT_FILE%"
+call mpiexec -n %NP% MPI_Matrix_Vector_General.exe "%VEC_FILE%" "%MAT_FILE%"
 
 endlocal
