@@ -104,7 +104,7 @@
  * Author:       <Your name or organization>
  * Created:      <YYYY-MM-DD>
  * Modified:     <Last modification date>
- * Version:      <Version number>
+ * Version:      <Version (semantic versioning: MAJOR.MINOR.PATCH, e.g., 1.0.0)>
  * 
  * License:      <License information if applicable>
  * 
