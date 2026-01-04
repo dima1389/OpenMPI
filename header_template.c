@@ -102,7 +102,7 @@
  *               <Brief explanation of the example output if needed>
  * 
  * Author:       <Your name or organization>
- * Created:      <Date>
+ * Created:      <YYYY-MM-DD>
  * Modified:     <Last modification date>
  * Version:      <Version number>
  * 
