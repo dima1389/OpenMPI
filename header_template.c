@@ -57,11 +57,11 @@
  * Execution:    <How to run the program>
  *               
  *               Basic usage:
- *                 mpiexec -n <num_processes> ./<executable_name> [arguments]
+ *                 mpiexec -n <num_processes> <executable_name> [arguments]
  *               
  *               Examples:
- *                 mpiexec -n 4 ./<executable_name>
- *                 mpiexec -n 8 ./<executable_name> <input_file> <output_file>
+ *                 mpiexec -n 4 <executable_name>
+ *                 mpiexec -n 8 <executable_name> <input_file> <output_file>
  *               
  *               Requirements:
  *               - Minimum number of processes: <N or "1">
@@ -95,7 +95,7 @@
  * 
  * Example:      <Sample execution with expected output>
  *               
- *               $ mpiexec -n 4 ./<executable_name>
+ *               $ mpiexec -n 4 <executable_name>
  *               <Expected output here>
  *               
  *               Explanation:
