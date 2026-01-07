@@ -1,0 +1,34 @@
+mpi-examples/
+├─ README.md
+├─ LICENSE
+├─ .gitignore
+├─ .editorconfig
+├─ .clang-format
+│
+├─ templates/
+│  └─ mpi_header_template.c
+│
+├─ src/
+│  ├─ 01_basics/
+│  │  ├─ mpi_hello.c
+│  │  └─ mpi_rank_size.c
+│  │
+│  ├─ 02_point_to_point/
+│  │  └─ mpi_send_recv.c
+│  │
+│  ├─ 03_collectives/
+│  │  └─ mpi_bcast_reduce.c
+│  │
+│  ├─ 04_timing/
+│  │  └─ mpi_timing_max.c
+│  │
+│  └─ 05_advanced/
+│     ├─ mpi_nonblocking.c
+│     └─ mpi_derived_types.c
+│
+├─ scripts/
+│  └─ build_mpi.(sh|bat|ps1)
+│
+├─ bin/          (gitignored)
+└─ docs/
+   └─ methodology.md
