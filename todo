@@ -34,3 +34,6 @@ mpi-examples/
    └─ methodology.md
 
 each function reference to official documentation in MPI_Function_Reference.md
+
+
+Merge src/MPI_Parallel_Sum.c & src/MPI_Parallel_Sum_Block.c

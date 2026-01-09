@@ -1,73 +1,83 @@
-#include <stdio.h>      // Standard I/O library for printf
-#include <string.h>     // For strlen used when sending the string
-#include <mpi.h>        // MPI library header
+/*
+ * File:
+ *   mpi_point_to_point_greetings.c
+ *
+ * Purpose:
+ *   Demonstrate basic MPI point-to-point communication with rank-based control flow.
+ *
+ * Description:
+ *   This example demonstrates blocking point-to-point messaging (MPI_Send/MPI_Recv)
+ *   in MPI_COMM_WORLD, where all non-root ranks send a null-terminated greeting
+ *   string to rank 0, and rank 0 receives and prints one message from each rank.
+ *   Observable outcome: rank 0 prints its own greeting plus one greeting per sender rank.
+ *
+ * Key concepts:
+ *   - ranks, communicator (MPI_COMM_WORLD), point-to-point communication
+ *   - deterministic blocking behavior (explicit source ranks in MPI_Recv)
+ *   - performance note: serialized receives at the root (potential root bottleneck)
+ *
+ * Algorithm / workflow (high level):
+ *   1) Initialize MPI and query rank/size
+ *   2) Non-root ranks format and send a greeting to rank 0
+ *   3) Rank 0 prints its own greeting and receives one message from each rank
+ *   4) Finalize MPI
+ *
+ * MPI features used (list only those actually used in this file):
+ *   - MPI_Init, MPI_Finalize
+ *   - MPI_Comm_rank, MPI_Comm_size
+ *   - MPI_Send, MPI_Recv
+ *
+ * Compilation:
+ *   mpicc -O2 -Wall -Wextra -Wpedantic -g mpi_point_to_point_greetings.c -o mpi_point_to_point_greetings
+ *
+ * Execution:
+ *   mpiexec -n <P> mpi_point_to_point_greetings
+ *
+ * Inputs:
+ *   - Command-line arguments: none
+ *   - Interactive input: none
+ *
+ * References:
+ *   - MPI Standard: Point-to-point communication (MPI_Send, MPI_Recv)
+ */
 
-// Maximum length (in chars) of the greeting string buffer, including the '\0'.
-const int MAX_STRING = 100;
+#include <stdio.h>      // Provides printf/sprintf for formatted output and string formatting.
+#include <string.h>     // Provides strlen to compute the payload length of the C string.
+#include <mpi.h>        // Provides MPI APIs and types (e.g., MPI_Init, MPI_Send, MPI_COMM_WORLD).
 
-int main(void)
+const int MAX_STRING = 100; // Defines the fixed receive/send buffer capacity (including the '\0').
+
+int main(void) // Entry point; uses no command-line arguments, so MPI_Init is called with NULLs.
 {
-    char gret[MAX_STRING];  // Buffer for the greeting message (for send/recv)
-    int csize;              // Total number of processes in MPI_COMM_WORLD
-    int prank;              // Rank (ID) of this process in MPI_COMM_WORLD
+    char gret[MAX_STRING];  // Allocates a stack buffer for sending/receiving a null-terminated greeting.
+    int csize;              // Stores the total number of ranks in MPI_COMM_WORLD.
+    int prank;              // Stores the calling rank ID within MPI_COMM_WORLD.
 
-    // Initialize the MPI execution environment.
-    // Both arguments are NULL since we do not need to propagate argc/argv.
-    MPI_Init(NULL, NULL);
+    MPI_Init(NULL, NULL); // Initializes the MPI runtime; required before any other MPI call.
 
-    // Determine the number of processes in the communicator MPI_COMM_WORLD.
-    // Result is stored in csize.
-    MPI_Comm_size(MPI_COMM_WORLD, &csize);
+    MPI_Comm_size(MPI_COMM_WORLD, &csize); // Queries communicator size so ranks can iterate over all participants.
 
-    // Determine the rank (ID) of the calling process in MPI_COMM_WORLD.
-    // Rank values are in the range [0, csize-1].
-    MPI_Comm_rank(MPI_COMM_WORLD, &prank);
+    MPI_Comm_rank(MPI_COMM_WORLD, &prank); // Queries this process's rank to select sender vs root behavior.
 
-    // All processes with rank != 0 act as senders.
-    if (prank != 0) {
-        // Format a process-specific greeting message into the buffer.
-        // The buffer must be large enough to hold the resulting string plus '\0'.
-        sprintf(gret, "Greets from process %d of %d!", prank, csize);
+    if (prank != 0) { // Selects all non-root ranks to act as senders and avoid root self-send complexity.
 
-        // Send the greeting string to process 0.
-        // - gret: start address of the send buffer
-        // - strlen(gret)+1: number of characters to send, including the '\0'
-        // - MPI_CHAR: datatype of each element in the buffer
-        // - 0: destination rank (root process)
-        // - 0: message tag (arbitrary but must match in MPI_Recv)
-        // - MPI_COMM_WORLD: communicator over which to send
-        MPI_Send(gret, strlen(gret) + 1, MPI_CHAR, 0, 0, MPI_COMM_WORLD);
+        sprintf(gret, "Greets from process %d of %d!", prank, csize); // Builds a rank-annotated greeting string in the local buffer.
 
-    } else {
-        // Rank 0: acts as the root/collector process.
+        MPI_Send(gret, (int)(strlen(gret) + 1), MPI_CHAR, 0, 0, MPI_COMM_WORLD); // Sends the null-terminated string to rank 0 using a matching tag.
 
-        // Print this process's own greeting locally (no communication involved).
-        printf("Greets from process %d of %d!\n", prank, csize);
+    } else { // Selects rank 0 as the designated root that collects and prints all greetings.
 
-        // Loop over all other ranks [1, csize-1] and receive one message from each.
-        for (int q = 1; q < csize; q++) {
+        printf("Greets from process %d of %d!\n", prank, csize); // Prints rank 0's greeting locally to include the root in the output set.
 
-            // Receive a null-terminated C string from process q.
-            // - gret: receive buffer
-            // - MAX_STRING: maximum number of MPI_CHAR elements to receive
-            // - MPI_CHAR: datatype of each element
-            // - q: source rank (the sender)
-            // - 0: message tag (must match the tag in MPI_Send)
-            // - MPI_COMM_WORLD: communicator
-            // - MPI_STATUS_IGNORE: we do not inspect the status (source, tag, count)
-            MPI_Recv(gret, MAX_STRING, MPI_CHAR, q, 0,
-                     MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+        for (int q = 1; q < csize; q++) { // Iterates over all sender ranks to receive exactly one message from each.
 
-            // Print the received message. The buffer is expected to contain a valid
-            // null-terminated C string because the sender transmitted strlen+1 bytes.
-            printf("%s\n", gret);
+            MPI_Recv(gret, MAX_STRING, MPI_CHAR, q, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE); // Receives from a specific source rank to ensure deterministic pairing.
+
+            printf("%s\n", gret); // Prints the received C string, relying on the sender transmitting the terminating '\0'.
         }
     }
 
-    // Cleanly shut down the MPI environment.
-    // No MPI calls are allowed after MPI_Finalize.
-    MPI_Finalize();
+    MPI_Finalize(); // Finalizes MPI and releases runtime resources; no MPI calls are valid after this point.
 
-    // By convention, return 0 to indicate successful termination.
-    return 0;
+    return 0; // Returns success status to the host environment.
 }
