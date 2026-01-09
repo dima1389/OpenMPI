@@ -37,3 +37,7 @@ each function reference to official documentation in MPI_Function_Reference.md
 
 
 Merge src/MPI_Parallel_Sum.c & src/MPI_Parallel_Sum_Block.c
+
+
+Finish file generation!
+Finish build scripts for all OS!
