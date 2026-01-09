@@ -32,3 +32,5 @@ mpi-examples/
 ├─ bin/          (gitignored)
 └─ docs/
    └─ methodology.md
+
+each function reference to official documentation in MPI_Function_Reference.md

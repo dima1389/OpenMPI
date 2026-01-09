@@ -1,1 +1,0 @@
-each function reference to official documentation in MPI_Function_Reference.md
